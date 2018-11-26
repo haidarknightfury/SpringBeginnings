@@ -18,7 +18,7 @@ public class Main {
         System.out.println("DISPLAYING ALL TODOS : " + todoService.buildListTodos());
 
         System.out.println(todoService.runQuery());
-        System.out.println("List of todos" + todoService.runQueryMoreResults());
+        System.out.println("List of todos using jdbc template" + todoService.runQueryMoreResults());
 
         context.close();
 
