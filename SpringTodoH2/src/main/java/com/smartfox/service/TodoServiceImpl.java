@@ -44,4 +44,8 @@ public class TodoServiceImpl {
         return this.todoRepository.runQueryMoreResults();
     }
 
+    public Long countResults() {
+        return this.todoRepository.count();
+    }
+
 }

@@ -64,6 +64,7 @@ public class TodoRepositoryImpl implements TodoRepository {
      * Return list of todos using jdbc template- only single result in row callback handler
      *
      */
+    @Override
     public List<Todo> runQuery() {
         List<Todo> todos = new ArrayList<>();
         this.jdbcTemplate.query("SELECT * FROM todo", new RowCallbackHandler() {
@@ -84,6 +85,7 @@ public class TodoRepositoryImpl implements TodoRepository {
      * Retrieve List of results
      *
      */
+    @Override
     public List<Todo> runQueryMoreResults() {
         return this.jdbcTemplate.query("SELECT * FROM todo", new ResultSetExtractor<List<Todo>>() {
             @Override
@@ -180,7 +182,8 @@ public class TodoRepositoryImpl implements TodoRepository {
         return this.jdbcTemplate.query(SELECT_RECENT_TODO, new TodoRowMapper(), count);
     }
 
-    private Long count() {
+    @Override
+    public Long count() {
         return this.jdbcTemplate.queryForObject("select count(todo_id) from todo", Long.class);
     }
 

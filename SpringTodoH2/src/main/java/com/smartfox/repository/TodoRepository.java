@@ -5,6 +5,7 @@ import java.util.List;
 import com.smartfox.model.Todo;
 
 public interface TodoRepository {
+
     void add(Todo todo);
 
     List<Todo> listTodos();
@@ -12,4 +13,6 @@ public interface TodoRepository {
     List<Todo> runQuery();
 
     List<Todo> runQueryMoreResults();
+
+    Long count();
 }
