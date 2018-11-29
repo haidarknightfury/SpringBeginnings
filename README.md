@@ -10,9 +10,8 @@ Date for completion -> 01/12/2018
 
 1. Add Readme in each folder to know what each is about
 2. SpringTodoH2 -> persist using entity manager methods
-3. Create New Project -> SpringTodoH2JPA - using spring data jpa and jpa repository
-4. Spring MVCTodoH2 -> configure of servlets including filters and advice + In CopyBooks
-5. SpringBootTodoH2JPA -> Use jpa and query dsls
+3. Spring MVCTodoH2 -> configure of servlets including filters and advice + In CopyBooks
+4. SpringBootTodoH2JPA -> Use jpa(OK) and query dsls
 
 Date for completion 12/12/2018
 
