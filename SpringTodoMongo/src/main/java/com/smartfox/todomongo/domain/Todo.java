@@ -11,8 +11,24 @@ public class Todo {
 
     private String body;
 
-    public Todo() {
+    private User user;
 
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Todo() {
+        super();
+    }
+
+    public Todo(String title, String body, User user) {
+        this.title = title;
+        this.body = body;
+        this.user = user;
     }
 
     public Todo(String title, String body) {
@@ -36,17 +52,17 @@ public class Todo {
         this.body = body;
     }
 
-    @Override
-    public String toString() {
-        return "Todo [todo_id=" + this.todoid + ", title=" + this.title + ", body=" + this.body + "]";
-    }
-
     public Integer getTodoid() {
         return this.todoid;
     }
 
     public void setTodoid(Integer todoid) {
         this.todoid = todoid;
+    }
+
+    @Override
+    public String toString() {
+        return "Todo [todoid=" + this.todoid + ", title=" + this.title + ", body=" + this.body + ", user=" + this.user + "]";
     }
 
 }
