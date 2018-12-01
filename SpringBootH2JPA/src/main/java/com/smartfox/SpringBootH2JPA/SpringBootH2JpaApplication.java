@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.smartfox.SpringBootH2JPA.model.Todo;
 import com.smartfox.SpringBootH2JPA.repository.TodoRepository;
+import com.smartfox.SpringBootH2JPA.repository.base.TodoReadOnlyRepository;
 import com.smartfox.SpringBootH2JPA.service.TodoService;
 
 @SpringBootApplication
@@ -16,6 +17,9 @@ public class SpringBootH2JpaApplication implements CommandLineRunner {
 
     @Autowired
     TodoRepository todoRepository;
+    
+    @Autowired
+    TodoReadOnlyRepository todoReadOnlyRepository;
     
     @Autowired
     TodoService todoService;
@@ -32,5 +36,8 @@ public class SpringBootH2JpaApplication implements CommandLineRunner {
         
         System.out.println("--------Using Query DSL---------");
         this.todoService.findByTitleAndBody("first", "body").forEach(System.out::println);
+        
+        System.out.println("---------Testing ReadOnly Repository--------");
+        System.out.println(this.todoReadOnlyRepository.findByLabel("first"));
     }
 }
