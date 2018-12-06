@@ -4,6 +4,24 @@ Beginning Spring Development. The Aim is to have different projects to facilitat
 It is also to consolidate examples in one place for easy recuperation and learning.
 
 
+
+
+
+## Resources
+
+1. Spring Data Examples
+
+- https://github.com/spring-projects/spring-data-examples
+- https://github.com/spring-projects/spring-data-book
+- https://spring.io/projects/spring-data-jpa#samples
+- https://github.com/spring-projects/spring-data-jpa
+- https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
+
+
+
+
+
+
 ## TODO
 
 Date for completion -> 01/12/2018
