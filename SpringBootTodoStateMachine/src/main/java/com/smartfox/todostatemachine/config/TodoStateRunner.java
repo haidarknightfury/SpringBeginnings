@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
+import com.smartfox.todostatemachine.listener.TodoStateMachineListener;
 import com.smartfox.todostatemachine.state.Events;
 import com.smartfox.todostatemachine.state.States;
 
@@ -17,6 +18,7 @@ public class TodoStateRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         this.stateMachine.start();
+        this.stateMachine.addStateListener(new TodoStateMachineListener());
         this.stateMachine.sendEvent(Events.INITIALISE);
         this.stateMachine.sendEvent(Events.SAVE);
     }
