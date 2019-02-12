@@ -16,11 +16,9 @@ public class TodoStateRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("RUNNER STARTED");
         this.stateMachine.start();
         this.stateMachine.sendEvent(Events.INITIALISE);
         this.stateMachine.sendEvent(Events.SAVE);
-
     }
 
 }
