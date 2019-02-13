@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../layout.xhtml"> <!--ui:composition element to explicitly define layout.xhtml as the template for this view -->
+    <ui:define name="content"> <!-- inform that this view must be rendered in the content area of the template-->
+        <h:form id="todoForm">
+            <p:panel header="Todo Details">
+                <h:panelGrid columns="1">
+                    <p:outputLabel for="name" value="Name: " />
+                    <p:inputText id="name" value="#{todoController.todo.name}" />
+                    <p:outputLabel for="description" value="Description: " />
+                    <p:inputText id="description" value="#{todoController.todo.description}" />
+                    <h:commandButton value="Save" action="#{todoController.save}" />
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

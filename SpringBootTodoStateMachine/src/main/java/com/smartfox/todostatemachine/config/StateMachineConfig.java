@@ -14,6 +14,12 @@ import com.smartfox.todostatemachine.service.TodoInitializationService;
 import com.smartfox.todostatemachine.state.Events;
 import com.smartfox.todostatemachine.state.States;
 
+/**
+ * Main Configuration class to configure the different states and what triggers them
+ * Extend EnumStateMachineConfigurerAdapter - Based on Enums - Can also use String
+ * @author hdargaye
+ *
+ */
 @Configuration
 @EnableStateMachine
 public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States, Events> {

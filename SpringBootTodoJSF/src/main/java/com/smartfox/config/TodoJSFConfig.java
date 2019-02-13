@@ -11,12 +11,11 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 /**
- * Created by hdargaye on 12/02/2019.
- * https://dzone.com/articles/developing-jsf-applications-with-spring-boot
+ * Created by hdargaye on 13/02/2019.
  */
 @Configuration
-public class JSFConfig
-{
+public class TodoJSFConfig {
+
 
     // Not sure if faces Servlet needed as already registered in web.xml
     @Bean
@@ -32,4 +31,5 @@ public class JSFConfig
         rwFilter.addUrlPatterns("/*");
         return rwFilter;
     }
+
 }

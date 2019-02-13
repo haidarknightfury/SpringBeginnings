@@ -4,6 +4,13 @@ import org.springframework.statemachine.annotation.OnTransitionEnd;
 import org.springframework.statemachine.annotation.OnTransitionStart;
 import org.springframework.statemachine.annotation.WithStateMachine;
 
+/**
+ * Events Listener - Way for listening to events
+ * Specifying Source / Target or Events
+ * @author hdargaye
+ *
+ */
+
 @WithStateMachine
 public class TodoState {
 

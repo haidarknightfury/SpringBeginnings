@@ -10,6 +10,12 @@ import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import com.smartfox.todostatemachine.state.Events;
 import com.smartfox.todostatemachine.state.States;
 
+/**
+ * Another way to configure a Listener - must extend StateMachineListenerAdapter
+ * Then It must be registered in the configurer
+ * @author hdargaye
+ *
+ */
 public class TodoStateMachineListener extends StateMachineListenerAdapter<States, Events> {
 
     final LinkedList<String> messages = new LinkedList<>();
