@@ -6,6 +6,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../layout.xhtml"> <!--ui:composition element to explicitly define layout.xhtml as the template for this view -->
     <ui:define name="content"> <!-- inform that this view must be rendered in the content area of the template-->
+
+        <p:outputLabel value="Hello: #{userManagedBean.username}" />
+
         <h:form id="todoForm">
             <p:panel header="Todo Details">
                 <h:panelGrid columns="1">

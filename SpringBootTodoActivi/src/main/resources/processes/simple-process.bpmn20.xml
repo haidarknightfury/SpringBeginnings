@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:activiti="http://activiti.org/bpmn" targetNamespace="Examples">
+ 
+     <!-- 1. Defining the process i.e simple process -->
+	<process id="simpleProcess" name="Simple Process">
+	
+	    <!--  Event to start the process -->
+		<startEvent id="theStart" />
+		<sequenceFlow sourceRef="theStart" targetRef="theTask1" />
+ 
+        <!--2. Configuring the user task i.e theTask1; activiti:assignee attribute for assigning task. -->
+		<userTask id="theTask1" name="Task 1" activiti:assignee="${person.name}">
+			<documentation>
+				Do the first task.
+			</documentation>
+		</userTask>
+ 
+        <!-- Configuring the flow from task1 to task2 -->
+		<sequenceFlow sourceRef="theTask1" targetRef="theTask2" />
+ 
+		<userTask id="theTask2" name="Task 2" activiti:assignee="${person.name}">
+			<documentation>
+				Work for the second task.
+			</documentation>
+		</userTask>
+ 
+         <!-- Configuring the flow from task2 to notification task -->
+		<sequenceFlow sourceRef="theTask2" targetRef="notification" />
+  
+        <!-- Configuring a script task instead of a userTask - Can execute groovy script -->
+		<scriptTask id="notification" name="final Notice" scriptFormat="groovy">
+			<script>
+				println 'finish Process.'
+			</script>
+		</scriptTask>
+ 
+ 		<!-- 3 Flow to end the task -->
+		<sequenceFlow sourceRef="notification" targetRef="theEnd" />
+		<endEvent id="theEnd" />
+	</process>
+ 
+ 
+     <!-- Simple Process
+     		1. theStart -> 2. theTask1 -> 3.theTask2 -> notification -> theEnd
+      -->
+</definitions>
