@@ -5,6 +5,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.smartfox.config.AppConfig;
+import com.smartfox.event.GenericSpringEventPublisher;
 import com.smartfox.event.TodoEventPublisher;
 import com.smartfox.service.TodoService;
 
@@ -19,6 +20,10 @@ public class Main {
         TodoEventPublisher publisher = applicationContext.getBean(TodoEventPublisher.class);
         // Event is synchronous
         publisher.publishTodoEvent("Hello from main");
+
+        // Sending a generic event
+        GenericSpringEventPublisher genericSpringEventPublisher = applicationContext.getBean(GenericSpringEventPublisher.class);
+        genericSpringEventPublisher.sendGenericEvent();
 
         ((ConfigurableApplicationContext) applicationContext).close();
 
