@@ -24,6 +24,7 @@ public class TodoJSFConfig {
         return new ServletRegistrationBean(servlet, "*.jsf");
     }
 
+    // Rewrite filter used to use rewrite for urls in Managed Beans
     @Bean
     public FilterRegistrationBean rewriteFilter() {
         FilterRegistrationBean rwFilter = new FilterRegistrationBean(new RewriteFilter());

@@ -37,9 +37,9 @@ public class PersonService {
     public void createPersons() {
         if (this.personRepository.findAll().size() == 0) {
 
-            this.personRepository.save(new Person("John", new Date()));
+            this.personRepository.save(new Person("Haidar", new Date()));
             this.personRepository.save(new Person("David", new Date()));
-            this.personRepository.save(new Person("Katherin", new Date()));
+            this.personRepository.save(new Person("Baka", new Date()));
         }
     }
 
@@ -48,6 +48,10 @@ public class PersonService {
     }
 
     private String processInfo() {
+
+        // Get the list of tasks from activi TaskService - sort asc -
+        // Tasks are in the bpmn file itself
+
         List<Task> tasks = this.taskService.createTaskQuery().orderByTaskCreateTime().asc().list();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Number of process definitions " + this.repositoryService.createProcessDefinitionQuery().count());
@@ -59,10 +63,20 @@ public class PersonService {
         return stringBuilder.toString();
     }
 
+    /**
+     * Starting the activi process
+     * @param assignee
+     * @return process info
+     */
     public String startProcess(String assignee) {
+        // Start the process by assignee
         Person person = this.personRepository.findByName(assignee);
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("person", person);
+
+        // The runtime service is responsible to start a process - use a key simpleProcess
+        // variables is a hashmap and contains person used in the bpmn20.xml
+
         this.runtimeService.startProcessInstanceByKey("simpleProcess", variables);
         return this.processInfo();
     }
