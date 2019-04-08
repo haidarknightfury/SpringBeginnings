@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
 import com.smartfox.service.TodoService;
+import com.smartfox.service.TodoServiceImpl;
 
 @EnableWebMvc
 @Configuration
@@ -39,5 +40,10 @@ public class AppConfig {
         exporter.setService(todoService);
         exporter.setServiceInterface(TodoService.class);
         return exporter;
+    }
+
+    @Bean
+    TodoService todoService() {
+        return new TodoServiceImpl();
     }
 }
