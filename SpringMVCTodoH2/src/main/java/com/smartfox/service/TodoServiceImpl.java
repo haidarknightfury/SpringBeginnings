@@ -1,7 +1,5 @@
 package com.smartfox.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,13 +37,12 @@ public class TodoServiceImpl {
 
     }
 
+    public List<Todo> getTodos() {
+        return this.todoRepository.listTodos();
+    }
+
     public void runQuery() {
-        this.jdbcTemplate.query("select * from todo", new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet arg0) throws SQLException {
-                System.out.println(arg0);
-            }
-        });
+        this.jdbcTemplate.query("select * from todo", (RowCallbackHandler) arg0 -> System.out.println(arg0));
     }
 
 }

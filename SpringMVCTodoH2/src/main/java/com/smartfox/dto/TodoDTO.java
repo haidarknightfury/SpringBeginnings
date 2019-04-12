@@ -12,6 +12,9 @@ public class TodoDTO implements Serializable {
     private String body;
     private String flag;
 
+    public TodoDTO() {
+    }
+
     public TodoDTO(String label, LocalDateTime createdDate, String body, String flag) {
         super();
         this.label = label;
@@ -20,36 +23,36 @@ public class TodoDTO implements Serializable {
         this.flag = flag;
     }
 
-    public String getLabel() {
-        return this.label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+    public String getBody() {
+        return this.body;
     }
 
     public LocalDateTime getCreatedDate() {
         return this.createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
+    public String getFlag() {
+        return this.flag;
     }
 
-    public String getBody() {
-        return this.body;
+    public String getLabel() {
+        return this.label;
     }
 
     public void setBody(String body) {
         this.body = body;
     }
 
-    public String getFlag() {
-        return this.flag;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.smartfox.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -11,7 +12,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "todo")
-public class Todo {
+public class Todo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,40 +45,40 @@ public class Todo {
         this.flag = flag;
     }
 
-    public String getLabel() {
-        return this.label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+    public String getBody() {
+        return this.body;
     }
 
     public LocalDateTime getCreatedDate() {
         return this.createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
+    public String getFlag() {
+        return this.flag;
     }
 
-    public String getBody() {
-        return this.body;
+    public String getLabel() {
+        return this.label;
+    }
+
+    public Long getTodoId() {
+        return this.todoId;
     }
 
     public void setBody(String body) {
         this.body = body;
     }
 
-    public String getFlag() {
-        return this.flag;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public void setFlag(String flag) {
         this.flag = flag;
     }
 
-    public Long getTodoId() {
-        return this.todoId;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public void setTodoId(Long todoId) {
