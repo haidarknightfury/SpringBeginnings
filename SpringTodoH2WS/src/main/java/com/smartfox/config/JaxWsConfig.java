@@ -10,7 +10,7 @@ public class JaxWsConfig {
     @Bean
     public SimpleJaxWsServiceExporter jaxWsServiceExporter() {
         SimpleJaxWsServiceExporter exporter = new SimpleJaxWsServiceExporter();
-        exporter.setBaseAddress("http://localhost:8080/services/");
+        exporter.setBaseAddress("http://localhost:9999/");
         return new SimpleJaxWsServiceExporter();
     }
 }
