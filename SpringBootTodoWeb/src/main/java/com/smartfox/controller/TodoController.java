@@ -3,10 +3,13 @@ package com.smartfox.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.smartfox.dto.TodoDTO;
 import com.smartfox.exceptions.TodoNotFoundException;
 import com.smartfox.model.Todo;
+import com.smartfox.model.User;
 import com.smartfox.service.TodoServiceImpl;
 
 @RestController
@@ -27,6 +31,13 @@ public class TodoController {
     @Autowired
     public TodoController(TodoServiceImpl todoService) {
         this.todoService = todoService;
+    }
+
+    @ModelAttribute
+    public User addModelBeforeTodoCalls(HttpServletRequest request) {
+        System.out.println("Before Calling Method : " + request.getMethod().toString());
+        User user = new User("SYSTEM", "SYS");
+        return user;
     }
 
     // http://localhost:8080/TodoWeb-0.0.1-SNAPSHOT/get/1
@@ -50,8 +61,8 @@ public class TodoController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    // @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<List<Todo>> test() {
+    public ResponseEntity<List<Todo>> test(@ModelAttribute("user") User user) {
+        System.out.println("User : " + user + " is getting all the todos");
         this.todoService.runQuery();
         return new ResponseEntity<>(this.todoService.getTodos(), HttpStatus.OK);
     }
