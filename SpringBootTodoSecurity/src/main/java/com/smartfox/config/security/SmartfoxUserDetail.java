@@ -2,12 +2,15 @@ package com.smartfox.config.security;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.smartfox.model.User;
+import com.smartfox.model.UserAuthority;
 
 /**
  * The UserDetail class - contains the object User
@@ -19,14 +22,19 @@ public class SmartfoxUserDetail implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     private User user;
+    private List<UserAuthority> authGroups;
 
-    public SmartfoxUserDetail(User user) {
+    public SmartfoxUserDetail(User user, List<UserAuthority> authGroups) {
         this.setUser(user);
+        this.authGroups = authGroups;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        if (null == this.authGroups) {
+            return Collections.emptySet();
+        }
+        return this.authGroups.stream().map(authGroup -> new SimpleGrantedAuthority(authGroup.getAuthGroup())).collect(Collectors.toSet());
     }
 
     @Override

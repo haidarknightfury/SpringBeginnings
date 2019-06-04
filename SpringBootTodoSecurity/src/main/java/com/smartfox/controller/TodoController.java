@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,9 @@ public class TodoController {
     @ModelAttribute
     public User addModelBeforeTodoCalls(HttpServletRequest request, Authentication authentication) {
         System.out.println("Before Calling Method : " + request.getMethod().toString());
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return null;
+        }
         return ((SmartfoxUserDetail) authentication.getPrincipal()).getUser();
     }
 
@@ -64,7 +68,8 @@ public class TodoController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Todo>> test(@ModelAttribute("user") User user) {
         System.out.println("User : " + user + " is getting all the todos");
         this.todoService.runQuery();
