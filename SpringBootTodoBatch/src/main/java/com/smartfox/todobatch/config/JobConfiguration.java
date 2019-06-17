@@ -65,7 +65,7 @@ public class JobConfiguration {
 				.build();
 	}
 	
-	@Bean
+	//@Bean
 	public Job secondJob() {
 		return this.jobBuilderFactory.get("chainableoncompletedsteps")
 				.start(step1())
@@ -75,7 +75,7 @@ public class JobConfiguration {
 				.build();
 	}
 	
-	@Bean
+	//@Bean
 	public Job failJob() {
 		return this.jobBuilderFactory.get("failingjob")
 		.start(step1())
@@ -84,7 +84,7 @@ public class JobConfiguration {
 		.build();
 	}
 	
-	@Bean
+	//@Bean
 	public Job failandrestart() {
 		return this.jobBuilderFactory.get("restartjob")
 				.start(step1())

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-5.1.xsd">
+
+    <!-- Basic Channel -->
+	<int:channel id="inputChannel"></int:channel>
+	
+	<!-- Output Channel -->
+	<int:channel id="outputChannel"></int:channel>
+	
+	<!-- Creating a basic bean -->
+	<bean class="com.smartfox.todo.PrintService" id="printService"></bean>
+	
+	<!-- Service activator endpoint - Connects a Spring Bean to an endPoint -->
+	<!-- Output Channel receives the output from inputChannel -->
+	<int:service-activator ref="printService" method="print"
+						   input-channel="inputChannel" 
+						   output-channel="outputChannel">
+	</int:service-activator>
+	
+	
+</beans>
