@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-5.1.xsd">
+
+	<!-- Gateway reference the interface and use the inputChannel -->
+	<!-- Gateway acts as an endpoint -->
+	<int:gateway service-interface="com.smartfox.todo.PrinterGateway"
+				  default-request-channel="pollableChannel"></int:gateway>
+				  
+	<!-- Pollable channel -acts as a queue-->
+	<int:channel id="pollableChannel">
+		<int:queue capacity="10"/>
+	</int:channel>
+	
+	<!-- Brige- connects a pollable channel to a subscribable channel -->
+	<int:bridge input-channel="pollableChannel" output-channel="inputChannel">
+		<!-- Need a poller to be able to pull message from pollable channel -->
+		<int:poller fixed-delay="5" time-unit="SECONDS" max-messages-per-poll="2" ></int:poller>
+	</int:bridge>
+				  
+	<!-- For processing the tasks in parallel -->
+	<task:executor id="executor" pool-size="5"/>
+
+    <!-- PubSub  Channel -->
+	<int:publish-subscribe-channel id="inputChannel" task-executor="executor"></int:publish-subscribe-channel>
+	
+	<!-- Creating a basic bean -->
+	<bean class="com.smartfox.todo.PrintService" id="printService"></bean>
+	<bean class="com.smartfox.todo.UppercasePrintService" id="uppercasePrintService"></bean>
+	
+	<!-- 2 Service activator endpoint - Connects a Spring Bean to an endPoint -->
+	<!-- Only 1 msg send to an endpoint at a time -->
+	<int:service-activator ref="uppercasePrintService" method="print" input-channel="inputChannel"></int:service-activator>
+	<int:service-activator ref="printService" method="print" input-channel="inputChannel"></int:service-activator>
+	
+</beans>

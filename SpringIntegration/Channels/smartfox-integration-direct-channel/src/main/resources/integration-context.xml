@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-5.1.xsd">
+
+	<!-- Gateway reference the interface and use the inputChannel -->
+	<!-- Gateway acts as an endpoint -->
+	<int:gateway service-interface="com.smartfox.todo.PrinterGateway"
+				  default-request-channel="inputChannel"></int:gateway>
+
+    <!-- Input  Channel -->
+	<int:channel id="inputChannel">
+		<!-- do not forward to other endpoints in case of error failover -->
+		<!-- can specify own implementation of load-balancer -> load-balancer-ref -->
+		<!-- <int:dispatcher failover="false" load-balancer="round-robin"/> -->
+	</int:channel>
+	
+	<!-- Creating a basic bean -->
+	<bean class="com.smartfox.todo.PrintService" id="printService"></bean>
+	<bean class="com.smartfox.todo.UppercasePrintService" id="uppercasePrintService"></bean>
+	
+	<!-- 2 Service activator endpoint - Connects a Spring Bean to an endPoint -->
+	<!-- Only 1 msg send to an endpoint at a time -->
+	<int:service-activator order="1" ref="uppercasePrintService" method="print" input-channel="inputChannel"></int:service-activator>
+	<int:service-activator order="2" ref="printService" method="print" input-channel="inputChannel"></int:service-activator>
+	
+</beans>
