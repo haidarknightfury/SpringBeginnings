@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+
+	<bean class="com.smartfox.todo.DirectoryPersonService" id="directoryPersonService"></bean>
+	<!-- Acts as a poller - continuously poll for new person and send them to printChanne -->
+	<!-- No gateway needed as already a point of entry -->
+	<int:inbound-channel-adapter ref="directoryPersonService" method="findNewPeople"
+						channel="printChannel">
+			<int:poller fixed-rate="3000"></int:poller>
+	</int:inbound-channel-adapter>
+				    
+	<!-- Input channel-->
+	<int:channel id="printChannel"/>
+	
+	<bean class="com.smartfox.todo.PersonRegistrationService" id="personRegistrationService"></bean>
+	<int:outbound-channel-adapter ref="personRegistrationService" method="registerEmail" channel="printChannel">
+	
+	</int:outbound-channel-adapter>
+    
+    
+	<!-- Service activator endpoint - Connects a Spring Bean to an endPoint -->
+	<!-- Only 1 msg send to an endpoint at a time -->
+	<int:service-activator ref="printService" method="print" input-channel="printChannel" />
+	<!-- Creating a basic bean -->
+	<bean class="com.smartfox.todo.PrintService" id="printService"/>
+	
+    
+</beans>

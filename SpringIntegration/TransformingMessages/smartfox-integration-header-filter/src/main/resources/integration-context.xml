@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-5.1.xsd">
+
+	<!-- Gateway reference the interface and use the inputChannel -->
+	<!-- Gateway acts as an endpoint -->
+	<int:gateway service-interface="com.smartfox.todo.PrinterGateway"
+				  default-request-channel="inputChannel"></int:gateway>
+				  
+    				  
+	<!-- Input channel-->
+	<int:channel id="inputChannel"></int:channel>
+	<!-- Output channel defined to be used - can be injected - can also not be specified-->
+    <int:channel id="outputChannel"></int:channel>
+    <!-- Filtered Channel -->
+    <int:channel id="filterChannel"></int:channel>				  
+    
+    <!-- Creating a Filter: Remove specific headers, comma separated -->
+    <!-- If not used then private key will be propagated to the other channels -->
+    <int:header-filter input-channel="inputChannel" output-channel="filterChannel"
+    				   header-names="privateKey"></int:header-filter>
+				  
+	<!-- Object to Json Transformer - require jackson-databind in pom -->
+	<int:object-to-json-transformer input-channel="filterChannel" output-channel="outputChannel" ></int:object-to-json-transformer>
+	
+	<!-- Creating a basic bean -->
+	<bean class="com.smartfox.todo.PrintService" id="printService"></bean>
+	
+	<!-- Service activator endpoint - Connects a Spring Bean to an endPoint -->
+	<!-- Only 1 msg send to an endpoint at a time -->
+	<int:service-activator ref="printService" method="print" input-channel="outputChannel"></int:service-activator>
+	
+	
+</beans>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+
+
+	<!-- Gateway reference the interface and use the inputChannel -->
+	<!-- Gateway acts as an endpoint -->
+	<int:gateway service-interface="com.smartfox.todo.EnhancedPrinterGateway">
+		
+		<!-- Default Headers for this gateway -->
+		<int:default-header name="globalValue" value="simpleValue"/>
+		<int:method name="print" request-channel="printChannel">
+			<!-- Headers specific to this method - SPEL Expression (args) -->
+			<int:header name="individualHeader" expression="#args[0].fname"/>
+		</int:method>
+		<int:method name="uppercase" request-channel="uppercaseChannel"></int:method>
+	</int:gateway>
+				    
+	<!-- Input channel-->
+	<int:channel id="printChannel"/>
+	<!-- Output channel-->
+    <int:channel id="uppercaseChannel"/>
+    
+    
+    
+	<!-- Service activator endpoint - Connects a Spring Bean to an endPoint -->
+	<!-- Only 1 msg send to an endpoint at a time -->
+	<int:service-activator ref="printService" method="print" input-channel="printChannel" />
+	<!-- Creating a basic bean -->
+	<bean class="com.smartfox.todo.PrintService" id="printService"/>
+	
+    
+	
+	<!-- Service Activator - Takes an input(Person) then Returns a String -->
+	<!-- Uses replyChannel from header to specify the channel to send message without specifying the outputChannel -->
+	
+	<int:service-activator ref="uppercasePrintService" method="execute" input-channel="uppercaseChannel" />
+	<bean class="com.smartfox.todo.UppercasePrintService" id="uppercasePrintService"/>
+
+
+</beans>
