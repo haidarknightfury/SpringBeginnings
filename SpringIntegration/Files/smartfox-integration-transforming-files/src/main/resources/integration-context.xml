@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration
+		 http://www.springframework.org/schema/integration/spring-integration-4.3.xsd 
+		 http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file-4.3.xsd">
+
+	<!-- Only file staring with sample will be considered and sent to inboundChannel -->
+	<int-file:inbound-channel-adapter directory="file:src/test/read"
+			filename-pattern="sample*" channel="inboundChannel">
+		<int:poller fixed-rate="2000"></int:poller>
+	</int-file:inbound-channel-adapter>
+	
+	<int:channel id="inboundChannel"></int:channel>
+	
+	<int:channel id="transformChannel"></int:channel>
+	<int-file:file-to-string-transformer input-channel="inboundChannel" output-channel="transformChannel"/>
+	
+	<bean class="com.smartfox.todo.FilePrinter" id="filePrinter"></bean>
+	<!-- Choose which method based on the type -->
+	<int:service-activator input-channel="transformChannel" ref="filePrinter" method="print"></int:service-activator>
+	
+</beans>

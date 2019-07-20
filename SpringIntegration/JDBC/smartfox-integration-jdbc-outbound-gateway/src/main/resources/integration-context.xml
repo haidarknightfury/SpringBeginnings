@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+	xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc-4.3.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file-4.3.xsd
+		http://www.springframework.org/schema/integration/ftp http://www.springframework.org/schema/integration/ftp/spring-integration-ftp-4.3.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+		
+		<!-- An embedded h2 database -->
+		<jdbc:embedded-database id="dataSource" type="H2">
+			<jdbc:script location="init.sql"/>
+		</jdbc:embedded-database>
+		
+		<int:gateway service-interface="com.smartfox.todo.PersonGateway"
+					 default-request-channel="inboundChannel"></int:gateway>
+					 
+					 
+		<int:channel id="inboundChannel"></int:channel>		
+		<int:channel id="jdbcChannel"></int:channel>
+		
+		<!-- Gets the person from the inboundChannel -->
+		<!-- update is the query executed -->
+		<!-- "query" executed after the update passed to the reply channel -->
+		<int-jdbc:outbound-gateway
+			request-channel="inboundChannel"
+			data-source="dataSource"
+			reply-channel="jdbcChannel"
+			update="insert into person values(:payload.id,:payload.lastName,:payload.firstName)"
+			query="select * from person where person_id=:payload.id"/>
+		
+		<bean id="messagePrinter" class="com.smartfox.todo.MessagePrinter"/>
+		
+		<int:service-activator ref="messagePrinter" method="print"
+								input-channel="jdbcChannel"></int:service-activator>
+		
+</beans>
