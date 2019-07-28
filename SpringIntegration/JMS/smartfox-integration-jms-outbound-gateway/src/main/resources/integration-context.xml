@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-4.3.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+
+	<!-- Undelying Connection Factory to connect to active mq -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL" value="tcp://localhost:61616" />
+			</bean>
+		</property>
+	</bean>
+
+	<int:channel id="inboundChannel"></int:channel>
+	<int:channel id="outboundChannel"></int:channel>
+	<int:channel id="jmsChannel"></int:channel>
+	<int:channel id="replyChannel"></int:channel>
+
+	<int:gateway
+		service-interface="com.smartfox.todo.PersonGateway"
+		default-request-channel="inboundChannel"></int:gateway>
+
+	<!-- Converts the person object to String to be send to outboundChannel -->
+	<!-- ActiveMQ cannot obtain direct objects -->
+	<int:object-to-string-transformer
+		input-channel="inboundChannel" output-channel="outboundChannel">
+	</int:object-to-string-transformer>
+
+	<!-- Active MQ Queue to send the messages -->
+	<bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="sample.queue"></constructor-arg>
+	</bean>
+
+
+	<!-- request destination = the queue to send the message -->
+	<!-- request-channel = listens to the channel for incoming message -->
+	<!-- reply-destination = where to get the transformed message - in this 
+		case processed by the inbound gateway and monitored -->
+	<!-- reply-channel = connect the outbound gateway to channel -->
+	<int-jms:outbound-gateway
+		connection-factory="connectionFactory" request-destination="queue"
+		request-channel="outboundChannel" reply-destination="replyQueue"
+		reply-channel="replyChannel">
+	</int-jms:outbound-gateway>
+
+	<int:service-activator ref="messagePrinter"
+		input-channel="replyChannel" method="printConsole"></int:service-activator>
+
+	<!-- Receive msg from JMSServer using inbound gateway and place msg on channel -->
+	<!-- Some processing is done and the reply is sent back to the MOM server -->
+	<!-- request-destination is the queue from which msg is received -->
+	<!-- Also receive reply from the processing on the jmsChannel and place 
+		on the replyQueue on MOM -->
+	<int-jms:inbound-gateway
+		connection-factory="connectionFactory" request-channel="jmsChannel"
+		request-destination="queue" default-reply-destination="replyQueue" />
+
+	<bean id="replyQueue"
+		class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="reply.queue"></constructor-arg>
+	</bean>
+
+	<bean id="messagePrinter" class="com.smartfox.todo.MessagePrinter"></bean>
+	<int:service-activator ref="messagePrinter"
+		input-channel="jmsChannel" method="print"></int:service-activator>
+
+
+</beans>

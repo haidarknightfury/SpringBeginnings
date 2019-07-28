@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+		http://www.springframework.org/schema/integration/xml http://www.springframework.org/schema/integration/xml/spring-integration-xml-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-4.3.xsd
+		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http-4.3.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+		
+		<!-- XPath - syntax navigate xml - allows expression to specify segments of xml i.e count times a section of xml present -->
+		<!-- XPath Transformer - modify the payload of a xml message -->
+		<!-- Adding XPath derived headers to messages - i.e ID based on the payload of the xml -->
+		<!-- Splitting XML Payloads + Filter XML Messages -->
+		
+		<!-- Need Spring-XML dependency in POM -->
+		<!-- Modify Message based on the xpath expression and place modified message on a channel -->		
+		
+		
+		<int:channel id="xmlInputChannel"></int:channel>
+		<int:channel id="xmlOutputChannel"></int:channel>
+		<int:channel id="filterChannel"></int:channel>
+		
+		<int-xml:xpath-splitter input-channel="xmlInputChannel" output-channel="xmlOutputChannel">
+			<int-xml:xpath-expression expression="/people/person"></int-xml:xpath-expression> <!-- Split by person element - Will have 2 Messages -->
+		</int-xml:xpath-splitter>
+		
+		<!-- Filter - Only person with firstName as Haidar is sent further -->
+		<int-xml:xpath-filter input-channel="xmlOutputChannel" output-channel="filterChannel">
+			<int-xml:xpath-expression expression="/person/firstname = 'Haidar'"></int-xml:xpath-expression>
+		</int-xml:xpath-filter>
+		
+		
+		<int:gateway service-interface="com.smartfox.todo.SimpleGateway" default-request-channel="xmlInputChannel">
+		</int:gateway>
+		
+		<bean id="printerBean" class="com.smartfox.todo.MessagePrinter"></bean>
+		
+		<int:service-activator input-channel="filterChannel" ref="printerBean" method="printConsole"></int:service-activator>
+		
+</beans>
