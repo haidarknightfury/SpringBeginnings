@@ -62,7 +62,7 @@ catch(SQLException e){
 - READ_COMMITED - Read only committed changes
 - REPEATABLE_READ - Read identical values multiple times
 - SERIALIZABLE - Read identical rows multiple times
-  
+
 
 ## Manage Transactions
 
@@ -93,7 +93,6 @@ public void saveTicket(Ticket ticket){
 }
 ```
 
-
 ## Programmatic Transaction Management
 
 - Transaction template - similar to other template like JDBCTemplate
@@ -103,3 +102,5 @@ public void saveTicket(Ticket ticket){
 - Hibernate Transaction Manager - Uniform API uses the features of Hibernate's transactions + Maintains the adv of Spring's unified transaction abstractions
 
 ## Declarative Transaction Management
+
+- @Transactional Annotation -
